@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Пациенты клиники</title>
+    <link rel="stylesheet" href="css.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true">+</span>
+          <div>
+            <p class="eyebrow">Пациентский учет</p>
+            <h1>Пациенты клиники</h1>
+          </div>
+        </div>
+
+        <div class="topbar__actions">
+          <button
+            class="button button--primary"
+            id="addPatientBtn"
+            type="button"
+          >
+            Добавить пациента
+          </button>
+          <button class="button button--secondary" id="resetBtn" type="button">
+            Сбросить
+          </button>
+          <button class="button button--secondary" id="loadBtn" type="button">
+            Загрузить пациентов
+          </button>
+        </div>
+      </header>
+
+      <main class="page-grid">
+        <section class="summary-band" aria-label="Сводка">
+          <article class="metric">
+            <span class="metric__label">Всего пациентов</span>
+            <strong class="metric__value" id="totalPatients">0</strong>
+          </article>
+          <article class="metric">
+            <span class="metric__label">Оплачено</span>
+            <strong class="metric__value" id="paidPatients">0</strong>
+          </article>
+          <article class="metric">
+            <span class="metric__label">Ожидают оплаты</span>
+            <strong class="metric__value" id="unpaidPatients">0</strong>
+          </article>
+          <article class="metric">
+            <span class="metric__label">Средний возраст</span>
+            <strong class="metric__value" id="averageAge">0</strong>
+          </article>
+        </section>
+
+        <section class="workspace" aria-label="Список пациентов">
+          <div class="toolbar">
+            <label class="field field--wide" for="searchInput">
+              <span class="field__label">Поиск</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Имя, диагноз или врач"
+                autocomplete="off"
+              />
+            </label>
+
+            <label class="field" for="paymentFilter">
+              <span class="field__label">Оплата</span>
+              <select id="paymentFilter">
+                <option value="all">Все</option>
+                <option value="paid">Оплачено</option>
+                <option value="unpaid">Не оплачено</option>
+              </select>
+            </label>
+
+            <label class="field" for="departmentFilter">
+              <span class="field__label">Отделение</span>
+              <select id="departmentFilter">
+                <option value="all">Все отделения</option>
+              </select>
+            </label>
+
+            <label class="field" for="sortSelect">
+              <span class="field__label">Сортировка</span>
+              <select id="sortSelect">
+                <option value="appointment">По дате приема</option>
+                <option value="name">По имени</option>
+                <option value="age">По возрасту</option>
+                <option value="risk">По риску</option>
+              </select>
+            </label>
+          </div>
+
+          <p class="status" id="status" role="status" aria-live="polite">
+            Данные еще не загружены
+          </p>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <h2>Пациенты не найдены</h2>
+            <p>Измените поиск или фильтры.</p>
+          </div>
+
+          <ul class="patients-list" id="patientsList"></ul>
+        </section>
+
+        <aside class="details" aria-labelledby="detailsTitle">
+          <p class="eyebrow">Карточка пациента</p>
+          <div class="details-photo" id="detailsPhoto" hidden></div>
+          <h2 id="detailsTitle">Пациент не выбран</h2>
+          <p class="details__note" id="detailsNote">
+            Загрузите список или добавьте пациента.
+          </p>
+
+          <dl class="details-list" id="detailsList" hidden></dl>
+
+          <div class="details-actions" id="detailsActions" hidden>
+            <label
+              class="button button--secondary button--file"
+              for="detailsPhotoInput"
+            >
+              Загрузить фото
+            </label>
+            <button
+              class="button button--secondary"
+              id="removePhotoBtn"
+              type="button"
+            >
+              Удалить фото
+            </button>
+            <button
+              class="button button--danger"
+              id="deletePatientBtn"
+              type="button"
+            >
+              Удалить пациента
+            </button>
+            <input
+              class="visually-hidden"
+              id="detailsPhotoInput"
+              type="file"
+              accept="image/*"
+            />
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <dialog class="modal" id="patientDialog">
+      <form class="patient-form" id="patientForm" novalidate>
+        <div class="modal__header">
+          <div>
+            <p class="eyebrow">Новая запись</p>
+            <h2>Добавить пациента</h2>
+          </div>
+          <button
+            class="icon-button"
+            id="cancelPatientBtn"
+            type="button"
+            aria-label="Закрыть форму"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <label class="field field--wide" for="patientName">
+            <span class="field__label">ФИО</span>
+            <input
+              id="patientName"
+              name="name"
+              type="text"
+              placeholder="Например, Елена Иванова"
+              required
+            />
+          </label>
+
+          <label class="field" for="patientAge">
+            <span class="field__label">Возраст</span>
+            <input
+              id="patientAge"
+              name="age"
+              type="number"
+              min="0"
+              max="120"
+              required
+            />
+          </label>
+
+          <label class="field" for="patientPhone">
+            <span class="field__label">Телефон</span>
+            <input
+              id="patientPhone"
+              name="phone"
+              type="tel"
+              placeholder="+7 900 000-00-00"
+            />
+          </label>
+
+          <label class="field" for="patientDepartment">
+            <span class="field__label">Отделение</span>
+            <input
+              id="patientDepartment"
+              name="department"
+              type="text"
+              list="departmentOptions"
+              placeholder="Терапия"
+              required
+            />
+            <datalist id="departmentOptions"></datalist>
+          </label>
+
+          <label class="field" for="patientDoctor">
+            <span class="field__label">Врач</span>
+            <input
+              id="patientDoctor"
+              name="doctor"
+              type="text"
+              placeholder="И. Фамилия"
+              required
+            />
+          </label>
+
+          <label class="field field--wide" for="patientDiagnosis">
+            <span class="field__label">Диагноз / причина визита</span>
+            <input
+              id="patientDiagnosis"
+              name="diagnosis"
+              type="text"
+              placeholder="Первичная консультация"
+              required
+            />
+          </label>
+
+          <label class="field field--wide" for="patientPhoto">
+            <span class="field__label">Фото пациента</span>
+            <input
+              id="patientPhoto"
+              name="photo"
+              type="file"
+              accept="image/*"
+            />
+            <span class="field__hint">
+              Если фото не выбрать, будет использован сгенерированный аватар.
+            </span>
+          </label>
+
+          <label class="field" for="patientAppointment">
+            <span class="field__label">Дата и время приема</span>
+            <input
+              id="patientAppointment"
+              name="appointment"
+              type="datetime-local"
+              required
+            />
+          </label>
+
+          <label class="field" for="patientPaid">
+            <span class="field__label">Оплата</span>
+            <select id="patientPaid" name="paid">
+              <option value="true">Оплачено</option>
+              <option value="false">Не оплачено</option>
+            </select>
+          </label>
+
+          <label class="field" for="patientRisk">
+            <span class="field__label">Риск</span>
+            <select id="patientRisk" name="risk">
+              <option value="low">Низкий</option>
+              <option value="medium">Средний</option>
+              <option value="high">Высокий</option>
+            </select>
+          </label>
+        </div>
+
+        <p class="form-error" id="formError" role="alert"></p>
+
+        <div class="modal__footer">
+          <button
+            class="button button--secondary"
+            type="button"
+            id="closeFormBtn"
+          >
+            Отмена
+          </button>
+          <button class="button button--primary" type="submit">
+            Сохранить
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="js.js"></script>
+  </body>
+</html>
