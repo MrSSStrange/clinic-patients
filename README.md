@@ -21,7 +21,7 @@ JavaScript patient management app with forms, validation, search, filters and dy
 ### Search and Filtering
 
 <img src="./assets/clinic-patients-search-filter.png" />
----
+
 
 ## 🧰 Tech Stack
 
