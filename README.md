@@ -14,14 +14,13 @@ JavaScript patient management app with forms, validation, search, filters and dy
 
 <img src="./assets/clinic-patients-preview.png" />
 
-### Patient Card
-
-<img src="./assets/clinic-patients-card.png" />
-
 ### Add Patient Form
 
-<img src="./assets/clinic-patients-form.png" />
+<img src="./assets/clinic-patients-add-form.png" />
 
+### Search and Filtering
+
+<img src="./assets/clinic-patients-search-filter.png" />
 ---
 
 ## 🧰 Tech Stack
