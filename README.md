@@ -1,81 +1,126 @@
 # Clinic Patients
 
-Веб-приложение для учета пациентов клиники. Проект сделан на чистых HTML, CSS и JavaScript без фреймворков и серверной части.
+JavaScript patient management app with forms, validation, search, filters and dynamic DOM rendering.
 
-## Демо
+## 🚀 Demo
 
-[Открыть проект на GitHub Pages](https://mrssstrange.github.io/clinic-patients/)
+[Open Live Demo](https://mrssstrange.github.io/clinic-patients/)
 
-## Возможности
+---
 
-- загрузка тестового списка пациентов;
-- добавление нового пациента через форму;
-- загрузка фотографии пациента;
-- автоматические сгенерированные аватары, если фото не выбрано;
-- удаление загруженного фото;
-- удаление пациента;
-- поиск по имени, диагнозу или врачу;
-- фильтрация по оплате и отделению;
-- сортировка по дате приема, имени, возрасту и риску;
-- просмотр подробной карточки выбранного пациента;
-- автоматический подсчет статистики: всего пациентов, оплачено, ожидают оплаты, средний возраст;
-- сохранение добавленных пациентов и загруженных фото в `localStorage`.
+## 📸 Screenshots
 
-## Технологии
+### Main Dashboard
 
-- HTML5;
-- CSS3;
-- JavaScript;
-- LocalStorage;
-- GitHub Pages.
+<img src="./assets/clinic-patients-preview.png" />
 
-## Структура проекта
+### Patient Card
 
-```text
-clinic-patients/
+<img src="./assets/clinic-patients-card.png" />
+
+### Add Patient Form
+
+<img src="./assets/clinic-patients-form.png" />
+
+---
+
+## 🧰 Tech Stack
+
+* HTML5
+* CSS3
+* JavaScript
+* LocalStorage
+* GitHub Pages
+
+---
+
+## ✨ Features
+
+* Load demo patient list
+* Add new patients through a form
+* Upload patient photos
+* Use generated avatars when no photo is selected
+* Delete uploaded photos
+* Delete patients
+* Search by name, diagnosis or doctor
+* Filter by payment status and department
+* Sort by appointment date, name, age and risk level
+* View detailed patient cards
+* Calculate patient statistics
+* Save added patients and uploaded photos in `localStorage`
+
+---
+
+## 📌 Project Idea
+
+This project is a frontend application for managing clinic patient records.
+
+The goal of the project is to practice working with forms, arrays, DOM rendering, filters, sorting, file uploads and browser storage without using a framework or backend.
+
+The project is based on a medical workflow and is connected to real tasks from clinic support systems.
+
+---
+
+## 🧩 Patient Fields
+
+Each patient record includes:
+
+* Full name
+* Age
+* Phone number
+* Department
+* Doctor
+* Diagnosis or visit reason
+* Appointment date and time
+* Payment status
+* Risk level
+* Patient photo or generated avatar
+
+---
+
+## 📁 Project Structure
+
+```txt
+clinic-patients
+├── assets
+│   ├── clinic-patients-preview.png
+│   ├── clinic-patients-card.png
+│   └── clinic-patients-form.png
 ├── index.html
 ├── html.html
 ├── css.css
 ├── js.js
-├── README.md
-└── assets/
-    └── patient-avatars.png
+└── README.md
 ```
 
-`index.html` нужен для GitHub Pages: именно этот файл открывается по основной ссылке проекта.
+`index.html` is used for GitHub Pages.
+`html.html` is the original working page.
+`css.css` contains the interface styles.
+`js.js` contains the application logic.
 
-`html.html` оставлен как исходная рабочая страница проекта.
+---
 
-`css.css` отвечает за внешний вид интерфейса.
+## ▶️ How to Run
 
-`js.js` содержит всю логику: загрузку, добавление, удаление, поиск, фильтры, сортировку и сохранение данных.
+Open `index.html` in a browser.
 
-`assets/patient-avatars.png` содержит сгенерированные аватары пациентов.
+No installation required.
 
-## Как запустить
+---
 
-Откройте файл `index.html` в браузере.
+## 💾 Data Storage
 
-Дополнительная установка не требуется.
+The project does not use a backend or database.
 
-## Хранение данных
+Added patients, uploaded photos and deleted records are saved in browser `localStorage`.
 
-Проект не использует сервер и базу данных. Добавленные пациенты, загруженные фото и удаленные записи сохраняются в `localStorage` браузера.
+Data is stored locally in the current browser.
 
-Если открыть проект в другом браузере или на другом устройстве, локально добавленных данных там не будет.
+---
 
-## Поля пациента
+## 👤 Author
 
-В карточке пациента используются:
+**Ernest Muzafarov**
+Frontend Developer
 
-- ФИО;
-- возраст;
-- телефон;
-- отделение;
-- врач;
-- диагноз или причина визита;
-- дата и время приема;
-- статус оплаты;
-- риск.
-
-Поле `риск` означает условный приоритет обращения: низкий, средний или высокий.
+[GitHub](https://github.com/MrSSStrange) · [LinkedIn](https://www.linkedin.com/in/ernest-muzafarov-919a323a2/)
