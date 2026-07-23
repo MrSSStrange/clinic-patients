@@ -30,10 +30,7 @@ const averageAge = document.getElementById("averageAge");
 const customPatientsStorageKey = "clinicCustomPatients";
 const photoOverridesStorageKey = "clinicPhotoOverrides";
 const deletedPatientsStorageKey = "clinicDeletedPatients";
-const generatedAvatarsPath = "assets/patient-avatars.png";
-const avatarColumns = 4;
-const avatarRows = 2;
-const avatarCount = avatarColumns * avatarRows;
+const avatarCount = 4;
 const maxPhotoSize = 512;
 
 const patientsSource = [
@@ -165,7 +162,7 @@ const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
 let photoOverrides = readPhotoOverrides();
 let deletedPatientIds = readDeletedPatientIds();
 let customPatients = readCustomPatients();
-let patients = [...customPatients];
+let patients = [...getAvailableSourcePatients(), ...customPatients];
 let selectedPatientId = patients[0]?.id ?? null;
 
 function fetchPatients() {
@@ -323,15 +320,10 @@ function setBackgroundImage(element, imageUrl) {
 }
 
 function applyPatientPhoto(element, patient) {
-  const avatarIndex = getAvatarIndex(patient);
-  const avatarColumn = avatarIndex % avatarColumns;
-  const avatarRow = Math.floor(avatarIndex / avatarColumns);
-  const avatarX = avatarColumn === 0
-    ? 0
-    : (avatarColumn / (avatarColumns - 1)) * 100;
-  const avatarY = avatarRow === 0 ? 0 : 100;
-
-  element.classList.remove("avatar--uploaded", "avatar--generated");
+  element.classList.remove("avatar--uploaded", "avatar--initials");
+  element.textContent = "";
+  element.style.backgroundImage = "none";
+  element.dataset.tone = String(getAvatarIndex(patient) % avatarCount);
 
   if (patient.photo) {
     element.classList.add("avatar--uploaded");
@@ -341,10 +333,12 @@ function applyPatientPhoto(element, patient) {
     return;
   }
 
-  element.classList.add("avatar--generated");
-  setBackgroundImage(element, generatedAvatarsPath);
-  element.style.backgroundPosition = `${avatarX}% ${avatarY}%`;
-  element.style.backgroundSize = `${avatarColumns * 100}% ${avatarRows * 100}%`;
+  element.classList.add("avatar--initials");
+  element.textContent = patient.name
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
 }
 
 function createPatientPhotoElement(patient, className) {
@@ -535,19 +529,20 @@ function renderPatients() {
 
     const avatar = createPatientPhotoElement(patient, "avatar");
     const content = createElement("span", "patient-card__content");
-    const header = createElement("span", "patient-card__header");
     const name = createElement("strong", "patient-card__name", patient.name);
+    const patientId = createElement(
+      "span",
+      "patient-card__id",
+      `Карта №${String(patient.id).padStart(4, "0")} · ${patient.diagnosis}`
+    );
+    const care = createElement("span", "patient-card__care");
+    const department = createElement("strong", null, patient.department);
+    const doctor = createElement("span", null, patient.doctor);
     const payment = createElement(
       "span",
       `badge ${patient.paid ? "badge--paid" : "badge--unpaid"}`,
       patient.paid ? "Оплачено" : "Не оплачено"
     );
-    const meta = createElement(
-      "span",
-      "patient-card__meta",
-      `${patient.department} · ${patient.doctor}`
-    );
-    const footer = createElement("span", "patient-card__footer");
     const date = createElement(
       "span",
       "patient-card__date",
@@ -559,17 +554,16 @@ function renderPatients() {
       `${riskLabels[patient.risk]} риск`
     );
 
-    header.append(name, payment);
-    footer.append(date, risk);
-    content.append(header, meta, footer);
-    button.append(avatar, content);
+    content.append(name, patientId);
+    care.append(department, doctor);
+    button.append(avatar, content, care, date, payment, risk);
     item.append(button);
     patientsList.append(item);
   });
 
   statusText.textContent = patients.length
-    ? `Показано: ${visiblePatients.length} из ${patients.length}`
-    : "Данные еще не загружены";
+    ? `Показано ${visiblePatients.length} из ${patients.length}`
+    : "В реестре пока нет пациентов";
 }
 
 function renderDetails() {
@@ -582,8 +576,8 @@ function renderDetails() {
     detailsActions.hidden = true;
     detailsTitle.textContent = "Пациент не выбран";
     detailsNote.textContent = patients.length
-      ? "Выберите пациента из списка."
-      : "Загрузите список или добавьте пациента.";
+      ? "Выберите запись в реестре слева."
+      : "Добавьте первого пациента.";
     detailsList.hidden = true;
     return;
   }
